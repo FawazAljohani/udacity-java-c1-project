@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-//@RequestMapping("/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
@@ -58,6 +58,11 @@ public class AuthController {
         }
 
         return "signup";
+    }
+
+    @PostMapping("/logout")
+    public String postLogout(Model model){
+        return "login";
     }
 
 }
