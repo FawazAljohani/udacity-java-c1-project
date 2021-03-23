@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.AuthenticationService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,29 +15,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
     private final UserService userService;
+    private final AuthenticationService authService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, AuthenticationService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     @GetMapping("/login")
-    public String getLogin(Model model){
-        System.out.println("is it working?!");
-        return "login";
-    }
+    public String getLogin(@ModelAttribute("loginForm") User user , Model model){
 
-    @PostMapping("/login")
-    public String postLogin(@ModelAttribute User user ,Model model){
+        model.addAttribute("loginForm", user);
         return "login";
     }
 
     @GetMapping("/signup")
-    public String getSignup(Model model){
+    public String getSignup(@ModelAttribute("signupForm") User user, Model model){
+        model.addAttribute("signupForm", user);
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String postSignup(@ModelAttribute User user, Model model){
+    public String postSignup(@ModelAttribute("signupForm") User user, Model model){
 
         String returnMessage = null;
 
