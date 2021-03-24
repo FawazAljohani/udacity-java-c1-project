@@ -58,9 +58,5 @@ public class AuthController {
         return "signup";
     }
 
-    @PostMapping("/logout")
-    public String postLogout(Model model){
-        return "login";
-    }
 
 }
