@@ -20,7 +20,7 @@
                     You successfully signed up! Please continue to the <a th:href="@{'/auth/login'}">login</a> page.
                 </div>
                 <div th:if="${signupError}" class="alert alert-danger">
-                    <span th:value="${signupError}">Example Signup Error Message</span>
+                    <span th:text="${signupError}">Example Signup Error Message</span>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -35,7 +35,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputUsername">Username</label>
-                        <input th:field="*{userName}" type="input" name="username" class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                        <input th:field="*{userName}" type="input" name="userName" class="form-control" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Password</label>
