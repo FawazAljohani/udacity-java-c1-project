@@ -60,7 +60,7 @@ public class AuthController {
             model.addAttribute("signupError", returnMessage);
         }
 
-        return "signup";
+        return "redirect:login";
     }
 
 

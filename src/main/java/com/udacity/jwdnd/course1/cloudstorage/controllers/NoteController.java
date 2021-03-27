@@ -4,9 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/note")
@@ -19,7 +17,7 @@ public class NoteController {
     }
 
     @PostMapping
-    public String postNote(@ModelAttribute("newNoteForm") Note note, Model model){
+    public String postNote(@ModelAttribute("notes") Note note, Model model){
 
         String returnMessage = null;
 
@@ -27,7 +25,12 @@ public class NoteController {
         String noteDescription = note.getNoteDescription();
         Integer userId = note.getUserId();
 
-        int rowsAdded = noteService.createNote(noteTitle, noteDescription, userId);
+        if(noteService.getNote(note.getNoteId()) != null){
+            noteService.updateNote(note);
+            return "redirect:home";
+        }
+
+        int rowsAdded = noteService.createNote(note);
         if(rowsAdded < 0){
             returnMessage = "Something wrong occured while creating the note, please try again";
         }
@@ -38,6 +41,14 @@ public class NoteController {
             model.addAttribute("ErrorMessage", returnMessage);
         }
 
-        return "home";
+        return "redirect:home";
+    }
+
+    @GetMapping("/delete/{noteid}")
+    public String deleteNote(@PathVariable("noteid") Integer noteId, Model model){
+
+        noteService.deleteNote(noteId);
+
+        return "redirect:/home";
     }
 }
