@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +49,7 @@ class CloudStorageApplicationTests {
 	//   a test that signs up a new user, logs in, verifies that the home page is accessible,
 	//  logs out, and verifies that the home page is no longer accessible.
 	@Test
-	public void signupLoginLogoutAndConfirm(){
+	public void signupAndLogin(){
 		String username = "test";
 		String password = "uncrackable";
 		String firstName = "Fawaz";
@@ -63,6 +64,13 @@ class CloudStorageApplicationTests {
 		loginPage.login(username, password);
 
 		Assertions.assertEquals("Home", driver.getTitle());
+	}
+
+	@Test
+	public void LogoutAndConfirm(){
+
+		signupAndLogin();
+
 		HomePage homePage = new HomePage(driver);
 		homePage.logout();
 
@@ -72,5 +80,38 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
+	// test that creates a note, and verifies it is displayed.
+	// test that edits an existing note and verifies that the changes are displayed.
+	// test that deletes a note and verifies that the note is no longer displayed.
+	@Test
+	public void createEditAndDeleteNote(){
+		String noteTitle = "original title";
+		String noteDescription = "original description";
+		String editedNoteTitle = "editied title";
+		String editedNoteDescription = "editied description";
+
+		signupAndLogin();
+
+		HomePage homePage = new HomePage(driver);
+
+		homePage.openNotesTab();
+		homePage.clickAddNewNote();
+		homePage.populateNoteForm(noteTitle, noteDescription);
+
+		Assertions.assertEquals(noteTitle, homePage.getNoteTitleText());
+		Assertions.assertEquals(noteDescription, homePage.getNoteDescriptionText());
+
+		homePage.openNotesTab();
+		homePage.clickEditNote();
+		homePage.populateNoteForm(editedNoteTitle, editedNoteDescription);
+
+		Assertions.assertEquals(editedNoteTitle, homePage.getNoteTitleText());
+		Assertions.assertEquals(editedNoteDescription, homePage.getNoteDescriptionText());
+
+		homePage.openNotesTab();
+		homePage.deleteNote();
+
+		Assertions.assertThrows(NoSuchElementException.class, homePage::getNoteTitleText);
+	}
 
 }

@@ -36,6 +36,7 @@ public class NoteController {
         }
 
         if (returnMessage == null) {
+            System.out.printf("created note successfully");
             model.addAttribute("SuccessMessage", true);
         } else {
             model.addAttribute("ErrorMessage", returnMessage);
