@@ -21,10 +21,6 @@ public class NoteController {
 
         String returnMessage = null;
 
-        String noteTitle = note.getNoteTitle();
-        String noteDescription = note.getNoteDescription();
-        Integer userId = note.getUserId();
-
         if(noteService.getNote(note.getNoteId()) != null){
             noteService.updateNote(note);
             return "redirect:home";
