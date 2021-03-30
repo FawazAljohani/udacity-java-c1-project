@@ -27,6 +27,7 @@ public class CredentialController {
         if(credentialService.getCredential(credential.getCredentialId()) != null){
             model.addAttribute("successMessage", "Credential has been updated successfully");
             credentialService.updateCredential(credential);
+            return "redirect:home";
         }
 
         int rowsAdded = credentialService.createCredential(credential);
