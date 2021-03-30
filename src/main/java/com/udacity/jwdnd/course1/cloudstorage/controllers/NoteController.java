@@ -17,7 +17,7 @@ public class NoteController {
     }
 
     @PostMapping
-    public String postNote(@ModelAttribute("notes") Note note, Model model){
+    public String createNote(@ModelAttribute("notes") Note note, Model model){
 
         String returnMessage = null;
 
@@ -37,9 +37,9 @@ public class NoteController {
 
         if (returnMessage == null) {
             System.out.printf("created note successfully");
-            model.addAttribute("SuccessMessage", true);
+            model.addAttribute("successMessage", true);
         } else {
-            model.addAttribute("ErrorMessage", returnMessage);
+            model.addAttribute("errorMessage", returnMessage);
         }
 
         return "redirect:home";
