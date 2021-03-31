@@ -141,12 +141,17 @@
                                 <tbody>
                                 <tr th:each="credential : ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <button type="button" class="btn btn-success" id="edit-credential-btn"
+                                                th:credentialId="${credential.getCredentialId()}"
+                                                th:url="${credential.getUrl()}"
+                                                th:userName="${credential.getUserName()}"
+                                                th:password="${encryptionService.decryptValue(credential.getPassword(), credential.getKey())}"
+                                                th:onclick="javascript:showCredentialModal(this.getAttribute('credentialId'),this.getAttribute('url'),this.getAttribute('userName'),this.getAttribute('password'));">Edit</button>
+                                        <a th:href="@{'/credential/delete/' + ${credential.getCredentialId()}}" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th scope="row">Example Credential URL</th>
-                                    <td>Example Credential Username</td>
-                                    <td >Example Credential Password</td>
+                                    <th th:text="${credential.getUrl()}" scope="row">Example Credential URL</th>
+                                    <td th:text="${credential.getUserName()}" >Example Credential Username</td>
+                                    <td th:text="${credential.getPassword()}" >Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -213,6 +218,14 @@
                 $('#credential-username').val(userName ? userName : '');
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
+            }
+            function showEditCredentialModal(credentialId, url, userName, password) {
+                $('#edit-credential-id').val(credentialId ? credentialId : '');
+                $('#edit-credential-url').val(url ? url : '');
+                $('#edit-credential-username').val(userName ? userName : '');
+                $('#edit-credential-password').val(password ? password : '');
+                // $('#edit-credential-key').val(key ? key : '');
+                $('#edit-credentialModal').modal('show');
             }
         </script>
     </body>

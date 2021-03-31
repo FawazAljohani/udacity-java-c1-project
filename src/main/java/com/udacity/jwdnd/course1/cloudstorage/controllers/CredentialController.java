@@ -26,7 +26,7 @@ public class CredentialController {
 
         if(credentialService.getCredential(credential.getCredentialId()) != null){
             model.addAttribute("successMessage", "Credential has been updated successfully");
-            credentialService.updateCredential(credential);
+            int rowsUpdated = credentialService.createCredential(credential);
             return "redirect:home";
         }
 
@@ -45,17 +45,30 @@ public class CredentialController {
         return "redirect:home";
     }
 
-    @GetMapping("/{credentialId}")
-    public String viewCredential(@PathVariable("credentialId") Integer credentialId, Model model){
+    @GetMapping("/delete/{credentialId}")
+    public String deleteCredential(@PathVariable("credentialId") Integer credentialId, Model model){
 
-        Credential cred = credentialService.getCredential(credentialId);
-        String decryptedPassword = encryptionService.decryptValue(cred.getPassword(), cred.getKey());
-        Credential newCredential = new Credential(cred.getCredentialId(), cred.getUrl(), cred.getUserName(), cred.getKey(), decryptedPassword, cred.getUserId());
+        int rowsDeleted = credentialService.deleteCredential(credentialId);
+        if(rowsDeleted < 0){
+            model.addAttribute("errorMessage" ,"Something wrong occurred while deleting the credential, please try again");
+        } else {
+            model.addAttribute("successMessage", true);
+        }
 
-
-
-        return "redirect:home";
+        return "redirect:/home";
     }
+
+//    @GetMapping("/{credentialId}")
+//    public String viewCredential(@PathVariable("credentialId") Integer credentialId, Model model){
+//
+//        Credential cred = credentialService.getCredential(credentialId);
+//        String decryptedPassword = encryptionService.decryptValue(cred.getPassword(), cred.getKey());
+//        Credential newCredential = new Credential(cred.getCredentialId(), cred.getUrl(), cred.getUserName(), cred.getKey(), decryptedPassword, cred.getUserId());
+//
+//        System.out.println("dec pass is " + decryptedPassword);
+//
+//        return "redirect:home";
+//    }
 
 
 }

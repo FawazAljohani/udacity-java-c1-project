@@ -33,6 +33,10 @@ public class CredentialService {
         credential.setKey(encodedKey);
         credential.setPassword(encryptedPassword);
 
+        if(credentialMapper.getCredential(credential.getCredentialId()) != null){
+            return credentialMapper.updateCredential(credential);
+        }
+
         return credentialMapper.createCredential(credential);
     }
 
@@ -42,10 +46,6 @@ public class CredentialService {
 
     public List<Credential> getAllCredentials(Integer userId){
         return credentialMapper.getAllCredentials(userId);
-    }
-
-    public int updateCredential(Credential credential){
-        return credentialMapper.updateCredential(credential);
     }
 
     public int deleteCredential(Integer credentialId){

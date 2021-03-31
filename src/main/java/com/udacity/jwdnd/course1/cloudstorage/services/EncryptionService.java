@@ -33,6 +33,7 @@ public class EncryptionService {
     }
 
     public String decryptValue(String data, String key) {
+
         byte[] decryptedValue = null;
 
         try {
@@ -43,7 +44,9 @@ public class EncryptionService {
         } catch (NoSuchAlgorithmException | NoSuchPaddingException
                 | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             logger.error(e.getMessage());
+            System.out.println(e);
         }
+
 
         return new String(decryptedValue);
     }
