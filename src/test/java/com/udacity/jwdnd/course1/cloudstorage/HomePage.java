@@ -11,7 +11,7 @@ public class HomePage {
     @FindBy(id = "logoutButton")
     private WebElement logoutBtn;
     @FindBy(id = "nav-notes-tab")
-    private WebElement notesTab
+    private WebElement notesTab;
     @FindBy(id = "add-new-note-btn")
     private WebElement addNewNoteBtn;
     @FindBy(id = "edit-note-btn")

@@ -6,26 +6,25 @@ import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/credential")
 public class CredentialController {
 
     private final CredentialService credentialService;
-    private final EncryptionService encryptionService;
 
-    public CredentialController(CredentialService credentialService, EncryptionService encryptionService) {
-        this.encryptionService = encryptionService;
+    public CredentialController(CredentialService credentialService) {
         this.credentialService = credentialService;
     }
 
     @PostMapping
-    public String createCredential(@ModelAttribute("credentials") Credential credential, Model model){
+    public String createCredential(@ModelAttribute("credentials") Credential credential, RedirectAttributes redirectAttrs){
 
         String returnMessage = null;
 
         if(credentialService.getCredential(credential.getCredentialId()) != null){
-            model.addAttribute("successMessage", "Credential has been updated successfully");
+            redirectAttrs.addFlashAttribute("successMessage", "Credentials have been Updated Successfully");
             int rowsUpdated = credentialService.createCredential(credential);
             return "redirect:home";
         }
@@ -37,38 +36,37 @@ public class CredentialController {
 
         if (returnMessage == null) {
             System.out.printf("created credential successfully");
-            model.addAttribute("successMessage", true);
+            redirectAttrs.addFlashAttribute("successMessage", "Credentials were added Successfully!");
         } else {
-            model.addAttribute("errorMessage", returnMessage);
+            redirectAttrs.addFlashAttribute("errorMessage", returnMessage);
         }
 
         return "redirect:home";
     }
 
     @GetMapping("/delete/{credentialId}")
-    public String deleteCredential(@PathVariable("credentialId") Integer credentialId, Model model){
+    public String deleteCredential(@PathVariable("credentialId") Integer credentialId, RedirectAttributes redirectAttrs){
 
         int rowsDeleted = credentialService.deleteCredential(credentialId);
         if(rowsDeleted < 0){
-            model.addAttribute("errorMessage" ,"Something wrong occurred while deleting the credential, please try again");
+            redirectAttrs.addFlashAttribute("errorMessage" ,"Something wrong occurred while deleting the credential, please try again");
         } else {
-            model.addAttribute("successMessage", true);
+            redirectAttrs.addFlashAttribute("successMessage", "Deleted Credentials Successfully!");
         }
 
         return "redirect:/home";
     }
 
-//    @GetMapping("/{credentialId}")
-//    public String viewCredential(@PathVariable("credentialId") Integer credentialId, Model model){
-//
-//        Credential cred = credentialService.getCredential(credentialId);
-//        String decryptedPassword = encryptionService.decryptValue(cred.getPassword(), cred.getKey());
-//        Credential newCredential = new Credential(cred.getCredentialId(), cred.getUrl(), cred.getUserName(), cred.getKey(), decryptedPassword, cred.getUserId());
-//
-//        System.out.println("dec pass is " + decryptedPassword);
-//
-//        return "redirect:home";
-//    }
-
+    //    @GetMapping("/{credentialId}")
+    //    public String viewCredential(@PathVariable("credentialId") Integer credentialId, Model model){
+    //
+    //        Credential cred = credentialService.getCredential(credentialId);
+    //        String decryptedPassword = encryptionService.decryptValue(cred.getPassword(), cred.getKey());
+    //        Credential newCredential = new Credential(cred.getCredentialId(), cred.getUrl(), cred.getUserName(), cred.getKey(), decryptedPassword, cred.getUserId());
+    //
+    //        System.out.println("dec pass is " + decryptedPassword);
+    //
+    //        return "redirect:home";
+    //    }
 
 }

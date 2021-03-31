@@ -9,11 +9,19 @@
         <title>Home</title>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
+        <div style="position: relative; margin-bottom: 45px" id="logoutDiv">
+            <form action="#" th:action="@{'/auth/logout'}" method="POST">
+                <button style="position: absolute; top: 0px; right: 0px" type="submit" class="btn btn-secondary" id="logoutButton">Logout</button>
+            </form>
+        </div>
         <div class="container">
-            <div id="logoutDiv">
-                <form action="#" th:action="@{'/auth/logout'}" method="POST">
-                    <button type="submit" class="btn btn-secondary float-right" id="logoutButton">Logout</button>
-                </form>
+            <div style="margin-top: 30px">
+            </div>
+            <div th:if="${successMessage}" class="alert alert-success">
+                <p th:text="${successMessage}">success</p>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+                <p th:text="${errorMessage}">Example Signup Error Message</p>
             </div>
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
@@ -25,7 +33,7 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <form action="#" enctype="multipart/form-data" method="POST">
+                        <form action="#" enctype="multipart/form-data" th:action="@{/file}" method="POST">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">
                                     <div class="col-sm-2">
@@ -49,12 +57,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="file : ${files}" >
                                     <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
-                                        <a  class="btn btn-danger">Delete</a>
+                                        <a th:href="@{'/file/view/' + ${file.getFileId()}}" target="_blank" class="btn btn-success">View</a>
+                                        <a th:href="@{'/file/delete/' + ${file.getFileId()}}" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th scope="row">ExampleFile.txt</th>
+                                    <th th:text="${file.getFileName()}" scope="row">ExampleFile.txt</th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -218,6 +226,15 @@
                 $('#credential-username').val(userName ? userName : '');
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
+            }
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
+            });
+            // read hash from page load and change tab
+            var activeTab = localStorage.getItem('activeTab');
+            if(activeTab){
+                $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
             }
 
         </script>

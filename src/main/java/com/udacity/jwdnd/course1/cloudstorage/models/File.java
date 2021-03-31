@@ -1,39 +1,28 @@
 package com.udacity.jwdnd.course1.cloudstorage.models;
 
-import java.sql.Blob;
-
 public class File {
 
-    private Integer id;
-    private String name;
+    private Integer fileId;
+    private String fileName;
     private String contentType;
-    private String size;
+    private Long fileSize;
     private Integer userId;
-    private Blob blob;
+    private byte[] fileData;
 
-    public File(Integer id, String name, String contentType, String size, Integer userId, Blob blob) {
-        this.id = id;
-        this.name = name;
-        this.contentType = contentType;
-        this.size = size;
-        this.userId = userId;
-        this.blob = blob;
+    public Integer getFileId() {
+        return fileId;
     }
 
-    public Integer getId() {
-        return id;
+    public void setFileId(Integer fileId) {
+        this.fileId = fileId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getFileName() {
+        return fileName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getContentType() {
@@ -44,12 +33,12 @@ public class File {
         this.contentType = contentType;
     }
 
-    public String getSize() {
-        return size;
+    public Long getFileSize() {
+        return this.fileSize;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 
     public Integer getUserId() {
@@ -60,11 +49,11 @@ public class File {
         this.userId = userId;
     }
 
-    public Blob getBlob() {
-        return blob;
+    public byte[] getFiledata() {
+        return (byte[] )this.fileData;
     }
 
-    public void setBlob(Blob blob) {
-        this.blob = blob;
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
     }
 }
