@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                        <button id="add-new-credential-btn" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
 
@@ -147,11 +147,11 @@
                                                 th:userName="${credential.getUserName()}"
                                                 th:password="${encryptionService.decryptValue(credential.getPassword(), credential.getKey())}"
                                                 th:onclick="javascript:showCredentialModal(this.getAttribute('credentialId'),this.getAttribute('url'),this.getAttribute('userName'),this.getAttribute('password'));">Edit</button>
-                                        <a th:href="@{'/credential/delete/' + ${credential.getCredentialId()}}" class="btn btn-danger">Delete</a>
+                                        <a id="delete-credential-btn" th:href="@{'/credential/delete/' + ${credential.getCredentialId()}}" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th th:text="${credential.getUrl()}" scope="row">Example Credential URL</th>
-                                    <td th:text="${credential.getUserName()}" >Example Credential Username</td>
-                                    <td th:text="${credential.getPassword()}" >Example Credential Password</td>
+                                    <th id="credential-url-text" th:text="${credential.getUrl()}" scope="row">Example Credential URL</th>
+                                    <td id="credential-username-text" th:text="${credential.getUserName()}" >Example Credential Username</td>
+                                    <td id="credential-password-text" th:text="${credential.getPassword()}" >Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -179,7 +179,7 @@
                                                 <input type="text" name= "userName" class="form-control" id="credential-username" maxlength="30" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">Password</label>
+                                                <label id="credential-password-label" for="note-title" class="col-form-label">Password</label>
                                                 <input type="text" name= "password" class="form-control" id="credential-password" maxlength="30" required>
                                             </div>
                                             <button id="credentialSubmit" type="submit" class="d-none"></button>
@@ -219,14 +219,7 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
-            function showEditCredentialModal(credentialId, url, userName, password) {
-                $('#edit-credential-id').val(credentialId ? credentialId : '');
-                $('#edit-credential-url').val(url ? url : '');
-                $('#edit-credential-username').val(userName ? userName : '');
-                $('#edit-credential-password').val(password ? password : '');
-                // $('#edit-credential-key').val(key ? key : '');
-                $('#edit-credentialModal').modal('show');
-            }
+
         </script>
     </body>
 </html>

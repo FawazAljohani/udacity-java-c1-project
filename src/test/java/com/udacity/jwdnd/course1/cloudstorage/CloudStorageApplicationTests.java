@@ -1,10 +1,14 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -13,8 +17,13 @@ class CloudStorageApplicationTests {
 
 	@LocalServerPort
 	private int port;
+	@Autowired
+	public CredentialService credentialService;
+	@Autowired
+	private EncryptionService encryptionService;
 
 	private WebDriver driver;
+
 
 	@BeforeAll
 	static void beforeAll() {
@@ -114,4 +123,57 @@ class CloudStorageApplicationTests {
 		Assertions.assertThrows(NoSuchElementException.class, homePage::getNoteTitleText);
 	}
 
+
+	// a test that creates a set of credentials, verifies that they are displayed, and verifies that the displayed password is encrypted.
+	// a test that views an existing set of credentials, verifies that the viewable password is unencrypted, edits the credentials, and verifies that the changes are displayed.
+	// a test that deletes an existing set of credentials and verifies that the credentials are no longer displayed
+
+	@Test
+	public void createEditAndDeleteCredential(){
+		String url = "https://mail.google.com/";
+		String userName = "Fawaz";
+		String password = "123456";
+		String editedUrl = "https://twitter.com";
+		String editedUserName = "Abdullah";
+		String editedPassword = "123321";
+
+		signupAndLogin();
+
+		HomePage homePage = new HomePage(driver);
+
+		// Create and Verify
+
+		homePage.openCredentialsTab();
+		homePage.clickAddNewCredential();
+		homePage.populateCredentialForm(url, userName, password);
+
+		Credential credential = this.credentialService.getCredential(1);
+
+		Assertions.assertEquals(url, homePage.getCredentialUrlText());
+		Assertions.assertEquals(userName, homePage.getCredentialUserNameText());
+		Assertions.assertEquals(this.encryptionService.encryptValue(password, credential.getKey()), homePage.getCredentialPasswordText());
+
+		// Verify decrypted password and Edit
+
+		homePage.openCredentialsTab();
+		homePage.clickEditCredential();
+
+		Assertions.assertEquals(password, homePage.getCredentialFormPassword());
+
+		// Edit and verify changes
+
+		homePage.populateCredentialForm(editedUrl, editedUserName, editedPassword);
+		Credential editedCredential = this.credentialService.getCredential(1);
+		homePage.openCredentialsTab();
+
+		Assertions.assertEquals(editedUrl, homePage.getCredentialUrlText());
+		Assertions.assertEquals(editedUserName, homePage.getCredentialUserNameText());
+		Assertions.assertEquals(this.encryptionService.encryptValue(editedPassword, editedCredential.getKey()), homePage.getCredentialPasswordText());
+
+		// Delete and verify
+
+		homePage.deleteCredential();
+
+		Assertions.assertThrows(NoSuchElementException.class, homePage::getCredentialUrlText);
+	}
 }
