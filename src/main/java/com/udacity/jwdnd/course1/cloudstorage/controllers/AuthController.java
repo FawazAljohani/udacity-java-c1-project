@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 
@@ -39,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public String postSignup(@ModelAttribute("signupForm") User user, Model model){
+    public String postSignup(@ModelAttribute("signupForm") User user, RedirectAttributes redirectAttrs, Model model){
 
         String returnMessage = null;
 
@@ -49,18 +50,20 @@ public class AuthController {
 
         if (returnMessage == null) {
             int rowsAdded = userService.createUser(user);
+
             if (rowsAdded < 0) {
                 returnMessage = "Some Errors occured, please try again";
             }
         }
 
         if (returnMessage == null) {
-            model.addAttribute("signupSuccess", true);
+            redirectAttrs.addFlashAttribute("signupSuccess", true);
         } else {
-            model.addAttribute("signupError", returnMessage);
+            model.addAttribute("errorMessage", returnMessage);
+            return "signup";
         }
 
-        return "signup";
+        return "redirect:login";
     }
 
 

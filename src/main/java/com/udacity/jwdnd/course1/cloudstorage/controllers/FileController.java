@@ -51,6 +51,11 @@ public class FileController {
             return "redirect:home";
         }
 
+        if(fileUpload.getSize() > 10485760){
+            redirectAttrs.addFlashAttribute("errorMessage", "File Size Limit (10MB) Exceeded!");
+            return "redirect:home";
+        }
+
         int rowsAdded = this.fileService.uploadFile(fileUpload, user.getUserId());
         if(rowsAdded < 0){
             System.out.println("Adding file Operation Result is: " + rowsAdded);
@@ -79,7 +84,7 @@ public class FileController {
     }
 
     @GetMapping("/view/{fileId}")
-    public ResponseEntity downloadFile(@PathVariable("fileId") Integer fileId) throws IOException {
+    public ResponseEntity downloadFile(@PathVariable("fileId") Integer fileId) {
         File file = this.fileService.getFile(fileId);
         String contentType = file.getContentType();
         String fileName = file.getFileName();
